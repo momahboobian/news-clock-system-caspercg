@@ -14,7 +14,7 @@
       #strap {
         position: absolute;
         bottom: 0;
-        left: -110%;
+        left: -150%;
         width: 100%;
         height: 100px;
         background-color: #bb1919;
@@ -31,13 +31,28 @@
       #strap.visible {
         left: 0;
       }
+
+      #debug-controls {
+        display: none;
+        background-color: #fff;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
     </style>
   </head>
   <body>
     <div id="strap">BBC NEWS 00:00</div>
 
+    <div id="debug-controls">
+      <h3>Debug Mode</h3>
+      <button onclick="triggerStrap()">Show</button>
+      <button onclick="window.leftTap('off')">Hide</button>
+    </div>
+
     <script>
       const strap = document.getElementById('strap')
+      const debugControls = document.getElementById('debug-controls')
 
       window.leftTap = function (action, text) {
         if (action === 'on' && text) {
@@ -48,6 +63,33 @@
         } else if (action === 'off') {
           strap.classList.remove('visible')
         }
+      }
+
+      // DEBUG MODE: set true to always preview, or use ?debug=true in the URL
+      const debug = new URLSearchParams(window.location.search).get('debug') === 'true'
+
+      function getCurrentTimeLabel() {
+        const now = new Date()
+        const hours = String(now.getHours()).padStart(2, '0')
+        const minutes = String(now.getMinutes()).padStart(2, '0')
+        return `BBC NEWS ${hours}:${minutes}`
+      }
+
+      function triggerStrap() {
+        window.leftTap('on', getCurrentTimeLabel())
+      }
+
+      if (debug) {
+        debugControls.style.display = 'block'
+        triggerStrap()
+
+        const now = new Date()
+        const delay = 60000 - (now.getSeconds() * 1000 + now.getMilliseconds())
+
+        setTimeout(() => {
+          triggerStrap()
+          setInterval(triggerStrap, 60000)
+        }, delay)
       }
     </script>
   </body>
