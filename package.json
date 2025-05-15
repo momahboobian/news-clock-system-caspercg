@@ -6,14 +6,17 @@
     "start": "ts-node src/clock-updater.ts",
     "build": "tsc",
     "lint": "eslint . --ext .ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "description": "",
   "devDependencies": {
+    "@types/jest": "^29.5.14",
     "@types/node": "^22.15.17",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.3.3",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   }
