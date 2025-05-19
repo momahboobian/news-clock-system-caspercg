@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BBC News Clock</title>
     <style>
       body {
@@ -13,7 +11,7 @@
 
       #strap {
         position: absolute;
-        bottom: 0;
+        bottom: 100px;
         left: -150%;
         width: 100%;
         height: 100px;
@@ -39,16 +37,37 @@
         border-radius: 5px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
       }
+
+      #ticker {
+        position: absolute;
+        bottom: 100px;
+        left: 0;
+        width: 100%;
+        height: 50px;
+        background-color: black;
+        color: white;
+        font-size: 24px;
+        display: flex;
+        align-items: center;
+        padding-left: 20px;
+        transform: translateX(100%);
+        transition: transform 0.5s ease;
+      }
+
+      #ticker.visible {
+        transform: translateX(0);
+      }
     </style>
   </head>
   <body>
-    <div id="strap">BBC NEWS 00:00</div>
-
     <div id="debug-controls">
       <h3>Debug Mode</h3>
       <button onclick="triggerStrap()">Show</button>
       <button onclick="window.leftTap('off')">Hide</button>
     </div>
+
+    <div id="strap">BBC NEWS 00:00</div>
+    <div id="ticker">Latest Headlines: Placeholder</div>
 
     <script>
       const strap = document.getElementById('strap')
@@ -90,6 +109,28 @@
           triggerStrap()
           setInterval(triggerStrap, 60000)
         }, delay)
+      }
+
+      let hideTimeout
+      window.leftTap = function (action, text, duration = 5000) {
+        clearTimeout(hideTimeout)
+        if (action === 'on' && text) {
+          strap.textContent = text
+          strap.classList.add('visible')
+          hideTimeout = setTimeout(() => strap.classList.remove('visible'), duration)
+        } else if (action === 'off') {
+          strap.classList.remove('visible')
+        }
+      }
+
+      window.rightTab = function (action, text) {
+        const ticker = document.getElementById('ticker')
+        if (action === 'on' && text) {
+          ticker.textContent = text
+          ticker.classList.add('visible')
+        } else if (action === 'off') {
+          ticker.classList.remove('visible')
+        }
       }
     </script>
   </body>
